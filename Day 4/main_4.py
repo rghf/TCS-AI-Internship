@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from sklearn.metrics import accuracy_score
 
 data = pd.read_csv('text_emotion.csv')
 
@@ -62,3 +63,13 @@ count_vect = CountVectorizer(analyzer='word')
 count_vect.fit(data['content'])
 X_train_count =  count_vect.transform(X_train)
 X_val_count =  count_vect.transform(X_val)
+
+# Model 1: Multinomial Naive Bayes Classifier
+from sklearn.naive_bayes import MultinomialNB
+nb = MultinomialNB()
+nb.fit(X_train_tfidf, y_train)y_pred = nb.predict(X_val_tfidf)print('naive bayes tfidf accuracy %s' % accuracy_score(y_pred, y_val))
+
+# Model 2: Linear SVM
+from sklearn.linear_model import SGDClassifier
+lsvm = SGDClassifier(alpha=0.001, random_state=5, max_iter=15, tol=None)
+lsvm.fit(X_train_tfidf, y_train)y_pred = lsvm.predict(X_val_tfidf)print('svm using tfidf accuracy %s' % accuracy_score(y_pred, y_val))
